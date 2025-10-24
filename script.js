@@ -1337,15 +1337,6 @@ async function openPlotModal(plotId) {
     }
     
     modal.classList.remove('hidden');
-    
-    // 记录浏览次数
-    if (landContract && walletAddress) {
-      try {
-        await landContract.viewPlot(plotId);
-      } catch (error) {
-        // 忽略错误
-      }
-    }
   } catch (error) {
     console.error('获取地块信息失败:', error);
     alert('获取地块信息失败: ' + error.message);
