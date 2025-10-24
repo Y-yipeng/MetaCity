@@ -1,0 +1,18 @@
+{
+    "name": "nft-marketplace",
+    "version": "1.0.0",
+    "dependencies": {
+        "@openzeppelin/contracts": "^5.4.0",
+        "axios": "1.6.2",
+        "busboy": "1.6.0",
+        "form-data": "4.0.0"
+    },
+    "description": "![区块链交易平台](./readme_img/overview.png)",
+    "main": "script.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+}

@@ -1,0 +1,271 @@
+/* ====================== 基础样式 ====================== */
+/* 统一主色与状态色变量 */
+:root {
+  --accent-color: #4ade80;
+  --color-available: var(--accent-color);
+  --color-sold: #6b7280;
+  --color-hot: #fbbf24;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #1a1a1a;
+}
+
+/* ====================== 头部区域 ====================== */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #222;
+  color: white;
+}
+
+header h1 {
+  margin: 0;
+}
+
+.header-btns {
+  display: flex;
+  align-items: center;
+}
+
+header button {
+  margin-left: 0.5em;
+  padding: 0.6em 1.2em;
+  border: none;
+  border-radius: 4px;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+header button:hover {
+  background-color: #45a049;
+}
+
+header #walletAddress {
+  margin-left: 1rem;
+  font-weight: bold;
+}
+
+/* ====================== 主要内容区域 ====================== */
+main {
+  padding: 2rem;
+}
+
+/* ====================== 通用区块样式 ====================== */
+section {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.centered {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #777;
+}
+
+.hidden {
+  display: none;
+}
+
+/* ====================== 商品网格布局 ====================== */
+.product-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+/* ====================== 商品卡片 ====================== */
+.product-card {
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.product-card img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+}
+
+.product-card button {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #2196F3;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.product-card button:hover {
+  background-color: #1976D2;
+}
+
+/* ====================== 表单控件 ====================== */
+form input[type="text"],
+form input[type="file"],
+form textarea {
+  width: 100%;
+  margin: 0.5em 0;
+  padding: 0.6em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* ====================== 交易记录 ====================== */
+.transaction-item {
+  padding: 1rem;
+  margin: 0.5rem 0;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.transaction-item p {
+  margin: 0.3rem 0;
+  color: #666;
+}
+
+/* ====================== 动画效果 ====================== */
+.animated {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s forwards;
+  animation-delay: 0.2s;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ====================== 新增优化样式 ====================== */
+/* 交易哈希链接样式 */
+.transaction-item a {
+  color: #2196F3;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.transaction-item a:hover {
+  text-decoration: underline;
+}
+
+/* 加载动画 */
+.loading {
+  padding: 1rem;
+  color: #666;
+  text-align: center;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+
+/* 我的商品头部样式 */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.upload-btn {
+  background: #4CAF50;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  transition: transform 0.2s;
+}
+
+.upload-btn:hover {
+  transform: scale(1.05);
+}
+
+/* 上传表单容器 */
+#uploadFormContainer {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+/* ====================== 3D地块样式 ====================== */
+/* 整体透视 */
+#city-map, #hot-plots, #my-plots-list { 
+  perspective: 800px; 
+}
+
+/* 地块容器 */
+.block-container { 
+  width: 60px; 
+  height: 60px; 
+  margin: 4px; 
+  perspective: 800px;
+  cursor: pointer;
+}
+
+.block { 
+  width: 100%; 
+  height: 100%; 
+  position: relative; 
+  transform-style: preserve-3d; 
+  transition: transform 0.5s; 
+}
+
+.block-container:hover .block { 
+  transform: rotateX(-20deg) rotateY(30deg); 
+}
+
+/* 六个面默认背景 */
+.face {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background-color: var(--color-available);
+  border: 1px solid #333;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #fff;
+  backface-visibility: hidden;
+}
+
+/* 不同状态覆盖 */
+.status-sold .face { 
+  background-color: var(--color-sold); 
+}
+
+.status-hot .face  { 
+  background-color: var(--color-hot); 
+}
+
+/* 六个面位置 */
+.face.front  { transform: rotateY(0deg) translateZ(30px); }
+.face.back   { transform: rotateY(180deg) translateZ(30px); }
+.face.right  { transform: rotateY(90deg) translateZ(30px); }
+.face.left   { transform: rotateY(-90deg) translateZ(30px); }
+.face.top    { transform: rotateX(90deg) translateZ(30px); }
+.face.bottom { transform: rotateX(-90deg) translateZ(30px); }

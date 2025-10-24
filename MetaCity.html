@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MetaCity - 3D Box 地块</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* 统一主色与状态色变量 */
+    :root {
+      --accent-color: #4ade80;
+      --color-available: var(--accent-color);
+      --color-sold: #6b7280;
+      --color-hot: #fbbf24;
+    }
+    /* 整体透视 */
+    #city-map, #hot-plots { perspective: 800px; }
+    /* 地块容器 */
+    .block-container { width: 60px; height: 60px; margin: 4px; perspective: 800px; }
+    .block { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.5s; }
+    .block-container:hover .block { transform: rotateX(-20deg) rotateY(30deg); }
+    /* 六个面默认背景 */
+    .face {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background-color: var(--color-available);
+      border: 1px solid #333;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #fff;
+      backface-visibility: hidden;
+    }
+    /* 不同状态覆盖 */
+    .status-sold .face { background-color: var(--color-sold); }
+    .status-hot .face  { background-color: var(--color-hot); }
+    /* 六个面位置 */
+    .face.front  { transform: rotateY(0deg) translateZ(30px); }
+    .face.back   { transform: rotateY(180deg) translateZ(30px); }
+    .face.right  { transform: rotateY(90deg) translateZ(30px); }
+    .face.left   { transform: rotateY(-90deg) translateZ(30px); }
+    .face.top    { transform: rotateX(90deg) translateZ(30px); }
+    .face.bottom { transform: rotateX(-90deg) translateZ(30px); }
+  </style>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+  <!-- 导航 -->
+  <header class="flex flex-col sm:flex-row justify-between items-center px-4 sm:px-6 py-4 bg-gray-800 shadow">
+    <h1 class="text-2xl sm:text-2xl font-bold mb-2 sm:mb-0" style="color: var(--accent-color);">MetaCity</h1>
+    <nav class="flex flex-wrap justify-center sm:justify-end space-x-2 sm:space-x-6 space-y-2 sm:space-y-0">
+      <a href="#map" class="hover:text-green-400">城市地图</a>
+      <a href="#hot" class="hover:text-green-400">关注度最高地块</a>
+      <a href="#how" class="hover:text-green-400">如何购买</a>
+      <a href="#" class="bg-green-500 px-4 py-2 rounded hover:bg-green-600">连接钱包</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="text-center py-20 bg-gradient-to-br from-gray-900 to-gray-800 px-4">
+    <h2 class="text-4xl sm:text-5xl font-extrabold mb-4">欢迎来到 <span style="color: var(--accent-color);">MetaCity</span></h2>
+    <p class="text-lg sm:text-xl mb-8">购买属于你的数字地块，建设数字未来。</p>
+    <a href="#map" class="bg-green-500 text-white px-6 py-3 rounded text-base sm:text-lg hover:bg-green-600">立即认购土地</a>
+  </section>
+
+  <!-- 地图区域 -->
+  <section id="map" class="py-20 bg-gray-950 px-4">
+    <div class="text-center mb-6">
+      <h2 class="text-2xl sm:text-3xl font-bold text-white">探索你的数字地块</h2>
+      <p class="text-sm sm:text-gray-400">点击地图上的地块，了解详情并立即购买或自定义已购地块。</p>
+    </div>
+    <div class="flex justify-center">
+      <div id="city-map" class="flex flex-wrap justify-center max-w-full"></div>
+    </div>
+  </section>
+
+  <!-- 关注度最高地块 -->
+  <section id="hot" class="py-20 bg-gray-900 px-4">
+    <div class="text-center mb-6">
+      <h2 class="text-2xl sm:text-3xl font-bold text-white">关注度最高地块</h2>
+      <p class="text-sm sm:text-gray-400">以下是当前关注度最高的地块，先到先得！</p>
+    </div>
+    <div class="flex justify-center">
+      <div id="hot-plots" class="flex flex-wrap justify-center max-w-full"></div>
+    </div>
+  </section>
+
+  <!-- 如何购买 -->
+  <section id="how" class="py-20 bg-gray-950 px-4">
+    <div class="max-w-xl mx-auto text-gray-200">
+      <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4">如何购买地块？</h2>
+      <ol class="list-decimal list-inside space-y-2">
+        <li>连接您的加密钱包（支持MetaMask、WalletConnect等）。</li>
+        <li>在“城市地图”或“关注度最高地块”中选择心仪的地块。</li>
+        <li>点击地块编号，打开购买弹窗并确认价格。</li>
+        <li>在钱包中确认交易，支付对应稳定币（USDT、USDC等）。</li>
+        <li>交易成功后，您的地块将自动记录到您的账户中。</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 弹窗 -->
+  <div id="plot-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden flex items-center justify-center z-50 px-4">
+    <div class="bg-gray-800 text-white p-6 rounded w-full max-w-xs relative">
+      <button onclick="closeModal()" class="absolute top-2 right-3 text-white text-xl">&times;</button>
+      <h3 id="plot-id" class="text-xl font-bold mb-2"></h3>
+      <p id="plot-status" class="mb-2 text-sm text-gray-300"></p>
+      <p id="plot-price" class="text-green-400 text-lg font-bold mb-4"></p>
+      <button id="buy-btn" class="bg-green-500 w-full py-2 rounded hover:bg-green-600 mb-4">连接钱包并购买</button>
+    </div>
+  </div>
+
+  <script>
+    // 状态数组：关注度最高与已售示例
+    const hotIds = [3, 7, 15, 22, 30, 45];
+    const soldIds = [1, 2, 4, 5, 6, 8, 9, 10];
+
+    // 通用函数：生成带状态的地块DOM
+    function createPlot(id) {
+      let status = 'available';
+      if (hotIds.includes(id)) status = 'hot';
+      else if (soldIds.includes(id)) status = 'sold';
+      const container = document.createElement('div');
+      container.className = 'block-container status-' + status;
+      const block = document.createElement('div'); block.className = 'block';
+      ['front','back','left','right','top','bottom'].forEach(faceName => {
+        const face = document.createElement('div'); face.className = 'face ' + faceName; face.textContent = id;
+        block.appendChild(face);
+      });
+      container.appendChild(block);
+      container.onclick = () => openModal(id);
+      return container;
+    }
+
+    // 渲染地图：100 地块
+    const cityMap = document.getElementById('city-map');
+    for (let i = 1; i <= 100; i++) cityMap.appendChild(createPlot(i));
+
+    // 渲染关注度最高地块示例
+    const hotContainer = document.getElementById('hot-plots');
+    hotIds.forEach(id => hotContainer.appendChild(createPlot(id)));
+
+    // 弹窗逻辑
+    function openModal(id) {
+      document.getElementById('plot-id').textContent = '地块 #' + id;
+      const statusText = soldIds.includes(id) ? '已售' : (hotIds.includes(id) ? '关注度最高' : '可购买');
+      document.getElementById('plot-status').textContent = '状态：' + statusText;
+      document.getElementById('plot-price').textContent = soldIds.includes(id) ? '' : '价格：100 USDT';
+      document.getElementById('buy-btn').style.display = soldIds.includes(id) ? 'none' : 'block';
+      document.getElementById('plot-modal').classList.remove('hidden');
+    }
+    function closeModal() { document.getElementById('plot-modal').classList.add('hidden'); }
+  </script>
+</body>
+</html>
